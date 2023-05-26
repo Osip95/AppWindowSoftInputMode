@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.CallActivity
 import com.example.realmdatabase.addscreen.AddContactActivity
 import com.example.realmdatabase.changescren.ChangeContactActivity
-import com.example.realmdatabase.data.model.Contact
 import com.example.realmdatabase.databinding.ActivityMainBinding
 import com.example.realmdatabase.domain.entity.ContactModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,6 +41,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.fabCall.setOnClickListener {
+            startActivity(Intent(this,CallActivity::class.java))
+        }
+
+
 
         val adapter = ContactsAdapter{ contact ->
             viewModel.editContact(contact)

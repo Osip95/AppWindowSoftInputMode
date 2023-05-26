@@ -19,11 +19,64 @@ android {
     }
 
     buildTypes {
+        def someProperty1 = true
+        def someProperty2 = false
+
+        def should_encrypt_prefs_field_name = "SHOULD_ENCRYPT_PREFS"
+
         release {
-            minifyEnabled false
+            shrinkResources true//Сжимаем итоговый APK
+            minifyEnabled true // Оптимизатор кода
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    crashlyticsCollectionEnabled: "true",
+                    applicationIdSuffix: "",
+                    someProperty1: someProperty1,
+                    someProperty2: someProperty2
+            ]
+            buildConfigField "String", "APPLICATION_ID_SUFFIX", "\"\""
+            buildConfigField "boolean", "IS_ANALYTICS_ENABLED", "true"
+            signingConfig signingConfigs.debug
+
+        }
+        debug {
+            debuggable true
+            shrinkResources true
+            minifyEnabled true
+            manifestPlaceholders =  [
+                    crashlyticsCollectionEnabled: "false",
+                    applicationIdSuffix: ".debag",
+                    someProperty1: someProperty1,
+                    someProperty2: someProperty2
+            ]
+            applicationIdSuffix ".debug"
+            versionNameSuffix '-debug'
+            buildConfigField "String", "APPLICATION_ID_SUFFIX", "\".debug\""
+            buildConfigField "boolean", "IS_ANALYTICS_ENABLED", "true"
+            buildConfigField "boolean", should_encrypt_prefs_field_name, "false"
         }
     }
+
+
+    flavorDimensions "contacts"
+    productFlavors {
+
+        demo {
+            dimension "contacts"
+            applicationIdSuffix ".demo"
+        }
+
+         full {
+             dimension "contacts"
+             applicationIdSuffix ".full"
+        }
+
+    }
+
+
+
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
